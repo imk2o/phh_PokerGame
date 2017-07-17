@@ -1,0 +1,17 @@
+
+.player_card {
+    display: inline-block;
+    background: #f8f8f8;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 20px 10px 20px 10px;
+    margin: 4px;
+}
+
+.player_card.selected {
+    background: #f88080;
+}
+
+.hidden {
+    visibility: hidden;
+}
