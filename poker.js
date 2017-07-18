@@ -186,6 +186,8 @@ function createShuffledCards() {
     // cardsはシャッフルされていない
     // cardsをシャッフルされたものにするにはどうしたらいいか？
 
+    // HINT: まず、0以上n未満の整数乱数を返すrandomInt()を作り、これを利用すると...
+
     return cards;
 }
 
