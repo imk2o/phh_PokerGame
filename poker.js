@@ -186,9 +186,49 @@ function createShuffledCards() {
     // cardsはシャッフルされていない
     // cardsをシャッフルされたものにするにはどうしたらいいか？
 
-    // HINT: まず、0以上n未満の整数乱数を返すrandomInt()を作り、これを利用すると...
+    // HINT:
+    // [シャッフル方法その1]
+    // (0) 以下のようなカードの山があったとき
+    //     ["♠️1", "♠️2", "♠️3", "♠️4", "♠️5", "♠️6", "♠️7", "♠️8", "♠️9"]
+    // (1) カードを "ランダムな位置で" 二つに分ける (以下は7つ目の位置で分割)
+    //     ["♠️1", "♠️2", "♠️3", "♠️4", "♠️5", "♠️6"]   ["♠7", "♠️8", "♠️9"]
+    // (2) 二つに分けたカードの山の上下を入れ替えて連結する
+    //     ["♠7", "♠️8", "♠️9", "♠️1", "♠️2", "♠️3", "♠️4", "♠️5", "♠️6"]
+    // (3) (1)〜(2)を何回か繰り返す
+    //
+    // [シャッフル方法その2]
+    // (0) 以下のようなカードの山があったとき
+    //     ["♠️1", "♠️2", "♠️3", "♠️4", "♠️5", "♠️6", "♠️7", "♠️8", "♠️9"]
+    // (1) ランダムな位置からカードを一枚抜く (以下は3つ目の位置にあるカードを抜く)
+    //     ["♠️1", "♠️2", "♠️4", "♠️5", "♠️6", "♠️7", "♠️8", "♠️9"]
+    //     抜き取ったカード: "♠️3"
+    // (2) 抜き取ったカードを、もうひとつのカードの山(最初は空っぽ)に積む
+    //     ["♠️1", "♠️2", "♠️4", "♠️5", "♠️6", "♠️7", "♠️8", "♠️9"]
+    //     もうひとつのカードの山: ["♠️3"]
+    // (3) (1)〜(2)を、元のカードの山が無くなるまで繰り返す
+    //
+    // 以上以外にもいろいろな方法が考えられるので、何か思いついたらその方法でもOK!!
+    //
+    // 上記のシャッフル方法を実現するためには、配列を操作するメソッド(関数)を利用するのが有効である
+    // 以下のコードを動かしてみて、splice(), concat()でどんなことができるか確認してみよう
+    //
+    // let array = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    // let removed = array.splice(0, 4);
+    // console.log("array=", array);
+    // console.log("removed=", removed);
+    // let array2 = array.concat(removed);
+    // console.log("array2=", array2);
 
     return cards;
+}
+
+// 0以上n未満の整数乱数を生成する
+//
+// 引数:
+//   - n: 生成する乱数の大きさ
+// 戻り値: 整数乱数を返す
+function randomInt(n) {
+    return Math.floor(Math.random() * n);
 }
 
 // [Q1-2]
@@ -208,6 +248,11 @@ function drawCards(cards, count) {
     // また、戻り値を引いたカードの配列になるよう修正すること
     let drawn_card = cards.shift();
 
+    // HINT:
+    // 上記のshift()をcount回繰り返せば、実現できないだろうか？
+    // もしくは[Q1-1]のヒントにある、splice()でもできるかも？
+    // いずれの方法でも、引いた分のカードが変数cardsから無くなっていなければならない！
+
     return ["♠️1", "♠️2", "♠️3", "♠️4", "♠️5"];    // FIXME: 引いたカードの配列に修正！
 }
 
@@ -226,18 +271,76 @@ function tradeCards(cards, player_cards, trade_card_indexes) {
     // (1) player_cardsからtrade_card_indexesが指す位置のカードを除くにはどうしたらいいか？
     // (2) (1)で除いたカードに、cardから新しいカードを補充にするにはどうしたらいいか？
 
+    // HINT:
+    // ここでも[Q1-1]のヒントにある配列を操作するメソッドが使えないだろうか？
+    // 但し配列から要素を削除すると配列の大きさが変わるため、インデックスのずれに注意が必要！
+    // 配列の削除や追加をしないでカードを交換する方法がないかを考えてみてもいいかも
+
     return player_cards;
 }
 
 // [Q1-3]
-// カード(card)の役を判定する
+// カード(cards)の役を判定する
+//
+// 引数:
+//   - cards: カード(配列)
+// 戻り値: 役名(hand)と倍率(rate)のオブジェクトを返す
+function evaluateCardValue(cards) {
+
+    // FIXME: cardsの役を判定し、適切な戻り値を返すこと
+
+    // HINT:
+    // ・カードの数字順に並べ替えると、いくつかの役が判定しやすくなる
+    // (以下にあるisOnePair()関数参照)
+    // ・カードの内容は文字列で表現されているため、そのカードのスート(絵柄)を求めるgetCardSuit(), 数字を求めるgetCardNumber()を利用するとよい
+    // ・例えば各役の判定を行う関数を作り、強い役から順に判定するとシンプルに考えられる
+    //
+    // if (isRoyalStraightFlush(cards)) {
+    //     return {hand: "ロイヤルストレートフラッシュ", rate: 1000};
+    // } else if (isStraightFlush(cards)) {
+    //     return {hand: "ストレートフラッシュ", rate: 500};
+    // } else if
+    //     ...
+    // } else {
+    //     return {hand: "ブタ", rate: 0};
+    // }
+
+    return {hand: "ブタ", rate: 0};
+}
+
+// ワン・ペア以上が成立しているか調べる
+//
+// 引数:
+//   - cards: カードの配列(5枚)
+// 戻り値: ワン・ペア以上が成立している場合はtrueを返す
+function isOnePair(cards) {
+    // TODO: sortByNumber()は適宜実装すること
+    let sorted_cards = sortByNumber(cards);
+
+    return (
+        getCardNumber(sorted_cards[0]) == getCardNumber(sorted_cards[1]) ||
+        getCardNumber(sorted_cards[1]) == getCardNumber(sorted_cards[2]) ||
+        getCardNumber(sorted_cards[2]) == getCardNumber(sorted_cards[3]) ||
+        getCardNumber(sorted_cards[3]) == getCardNumber(sorted_cards[4])
+    );
+}
+
+// カードのスート(絵柄)を求める
 //
 // 引数:
 //   - card: カード
-// 戻り値: 役名(hand)と倍率(rate)のオブジェクトを返す
-function evaluateCardValue(card) {
+// 戻り値: スートを返す
+function getCardSuit(card) {
+    // スートはサロゲートペア文字(教科書P.118)であるため、2文字分取り出す
+    return card.substr(0, 2);
+}
 
-    // FIXME: cardの役を判定し、適切な戻り値を返すこと
-
-    return {hand: "ブタ", rate: 0};
+// カードの数字を求める
+//
+// 引数:
+//   - card: カード
+// 戻り値: 数字を返す
+function getCardNumber(card) {
+    // スートはサロゲートペア文字(教科書P.118)であるため、2文字後を取り出す
+    return Number(card.substr(2));
 }
